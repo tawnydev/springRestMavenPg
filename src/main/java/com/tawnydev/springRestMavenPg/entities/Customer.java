@@ -1,24 +1,25 @@
 package com.tawnydev.springRestMavenPg.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class Customer {
 
         @Id
         @GeneratedValue(strategy= GenerationType.AUTO)
         private Long id;
-        private String firstName;
-        private String lastName;
+        @Column(length = 20)
+        private String firstname;
+        @Column(length = 20)
+        private String lastname;
 
         protected Customer() {}
 
-        public Customer(String firstName, String lastName) {
-            this.firstName = firstName;
-            this.lastName = lastName;
+        public Customer(String firstname, String lastname) {
+            this.firstname = firstname;
+            this.lastname = lastname;
         }
 
 }
