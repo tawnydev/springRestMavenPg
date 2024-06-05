@@ -5,12 +5,9 @@ import com.tawnydev.springRestMavenPg.repositories.CustomerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -23,13 +20,13 @@ public class CustomerController {
     private CustomerRepository customerRepository;
 
     @GetMapping(ROOT_CUSTOMER)
-    public ResponseEntity<List<Customer>> getCustomers() {
+    public List<Customer> getCustomers() {
         List<Customer> list = new ArrayList<>();
         for (Customer customer : customerRepository.findAll()) {
             list.add(customer);
         }
         logger.info("OK get customers");
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return list;
     }
 
     // Single item
@@ -49,10 +46,10 @@ public class CustomerController {
     Customer replaceCustomer(@RequestBody Customer newCustomer, @PathVariable Long id) {
 
         return customerRepository.findById(id)
-                .map(employee -> {
-                    employee.setFirstname(newCustomer.getFirstname());
-                    employee.setLastname(newCustomer.getLastname());
-                    return customerRepository.save(employee);
+                .map(customer -> {
+                    customer.setFirstname(newCustomer.getFirstname());
+                    customer.setLastname(newCustomer.getLastname());
+                    return customerRepository.save(customer);
                 })
                 .orElseGet(() -> {
                     newCustomer.setId(id);
