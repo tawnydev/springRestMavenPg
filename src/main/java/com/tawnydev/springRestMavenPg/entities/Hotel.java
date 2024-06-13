@@ -13,6 +13,8 @@ public class Hotel {
     @Column(length = 20)
     private String name;
 
+    protected Hotel() {}
+
     public Hotel(String name){
         this.name = name;
     }
