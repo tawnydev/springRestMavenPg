@@ -5,6 +5,10 @@ import com.tawnydev.springRestMavenPg.repositories.HotelRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,9 +24,13 @@ public class HotelController {
     private HotelRepository HotelRepository;
 
     @GetMapping(ROOT_HOTEL)
-    public List<Hotel> getHotels() {
+    public List<Hotel> getHotels(Integer page) {
+        if (page == null) {
+            page = 0;
+        }
         List<Hotel> list = new ArrayList<>();
-        for (Hotel hotel : HotelRepository.findAll()) {
+        Pageable pageable = PageRequest.of(page,5, Sort.by("name"));
+        for (Hotel hotel : HotelRepository.findAll(pageable)) {
             list.add(hotel);
         }
         logger.info("OK get hotels");

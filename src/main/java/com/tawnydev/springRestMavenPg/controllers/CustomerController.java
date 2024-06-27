@@ -5,6 +5,9 @@ import com.tawnydev.springRestMavenPg.repositories.CustomerRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,9 +23,13 @@ public class CustomerController {
     private CustomerRepository customerRepository;
 
     @GetMapping(ROOT_CUSTOMER)
-    public List<Customer> getCustomers() {
+    public List<Customer> getCustomers(Integer page) {
+        if (page == null) {
+            page = 0;
+        }
         List<Customer> list = new ArrayList<>();
-        for (Customer customer : customerRepository.findAll()) {
+        Pageable pageWithFiveElements = PageRequest.of(page, 5, Sort.by("lastname"));
+        for (Customer customer : customerRepository.findAll(pageWithFiveElements)) {
             list.add(customer);
         }
         logger.info("OK get customers");
@@ -32,7 +39,6 @@ public class CustomerController {
     // Single item
     @GetMapping(ROOT_CUSTOMER + "/{id}")
     Customer one(@PathVariable Long id) throws Exception {
-
         return customerRepository.findById(id)
                 .orElseThrow(() -> new Exception("Could not find customer " + id));
     }
