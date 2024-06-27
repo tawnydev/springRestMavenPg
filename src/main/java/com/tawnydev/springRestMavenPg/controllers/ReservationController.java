@@ -5,6 +5,9 @@ import com.tawnydev.springRestMavenPg.repositories.ReservationRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,9 +23,13 @@ public class ReservationController {
     private ReservationRepository reservationRepository;
 
     @GetMapping(ROOT_RESERVATION)
-    public List<Reservation> getReservations() {
+    public List<Reservation> getReservations(Integer page) {
+        if (page == null) {
+            page = 0;
+        }
         List<Reservation> list = new ArrayList<>();
-        for (Reservation res : reservationRepository.findAll()) {
+        Pageable pageable = PageRequest.of(page,5, Sort.by("hotel"));
+        for (Reservation res : reservationRepository.findAll(pageable)) {
             list.add(res);
         }
         logger.info("OK get hotels");
