@@ -35,36 +35,53 @@ public class ReservationController {
         logger.info("OK get hotels");
         return list;
     }
-//
-//    // Single item
-//    @GetMapping(ROOT_RESERVATION + "/{id}")
-//    Reservation one(@PathVariable Long id) throws Exception {
-//
-//        return reservationRepository.findById(id)
-//                .orElseThrow(() -> new Exception("Could not find Reservation " + id));
-//    }
+
+    // Single item
+    @GetMapping(ROOT_RESERVATION + "/{id}")
+    Reservation one(@PathVariable Long id) throws Exception {
+
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new Exception("Could not find Reservation " + id));
+    }
 
     @PostMapping(ROOT_RESERVATION)
     Reservation newReservation(@RequestBody Reservation newReservation) {
         return reservationRepository.save(newReservation);
     }
 
-//    @PutMapping(ROOT_RESERVATION + "/{id}")
-//    Reservation replaceReservation(@RequestBody Reservation newReservation, @PathVariable Long id) {
-//
-//        return reservationRepository.findById(id)
-//                .map(hotel -> {
-//                    hotel.setName(newReservation.getName());
-//                    return reservationRepository.save(hotel);
-//                })
-//                .orElseGet(() -> {
-//                    newReservation.setId(id);
-//                    return reservationRepository.save(newReservation);
-//                });
-//    }
+    @PutMapping(ROOT_RESERVATION + "/{id}")
+    Reservation replaceReservation(@RequestBody Reservation newReservation, @PathVariable Long id) {
 
-//    @DeleteMapping(ROOT_RESERVATION + "/{id}")
-//    void deleteReservation(@PathVariable Long id) {
-//        reservationRepository.deleteById(id);
-//    }
+        return reservationRepository.findById(id)
+                .map(res -> {
+                    if (newReservation.getChambre() != null){
+                        res.setChambre(newReservation.getChambre());
+                    }
+                    if (newReservation.getCustomer() != null){
+                        res.setCustomer(newReservation.getCustomer());
+                    }
+                    if (newReservation.getHotel() != null){
+                        res.setHotel(newReservation.getHotel());
+                    }
+                    if (newReservation.getOptionPetitDej() != null){
+                        res.setOptionPetitDej(newReservation.getOptionPetitDej());
+                    }
+                    if (newReservation.getOptionSpa() != null){
+                        res.setOptionSpa(newReservation.getOptionSpa());
+                    }
+                    if (newReservation.getCoutRestaurant() != null){
+                        res.setCoutRestaurant(newReservation.getCoutRestaurant());
+                    }
+                    return reservationRepository.save(res);
+                })
+                .orElseGet(() -> {
+                    newReservation.setId(id);
+                    return reservationRepository.save(newReservation);
+                });
+    }
+
+    @DeleteMapping(ROOT_RESERVATION + "/{id}")
+    void deleteReservation(@PathVariable Long id) {
+        reservationRepository.deleteById(id);
+    }
 }

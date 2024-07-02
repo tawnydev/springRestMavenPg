@@ -5,17 +5,16 @@ import lombok.Data;
 
 @Entity
 @Data
-@IdClass(ReservationId.class)
 public class Reservation {
     @Id
+    private Long id;
+
     private Integer chambre;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "id_hotel")
     private Hotel hotel;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;

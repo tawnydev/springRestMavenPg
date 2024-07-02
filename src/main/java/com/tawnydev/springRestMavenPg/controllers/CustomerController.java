@@ -53,8 +53,13 @@ public class CustomerController {
 
         return customerRepository.findById(id)
                 .map(customer -> {
-                    customer.setFirstname(newCustomer.getFirstname());
-                    customer.setLastname(newCustomer.getLastname());
+                    if (newCustomer.getFirstname() != null) {
+                        customer.setFirstname(newCustomer.getFirstname());
+                    }
+                    if (newCustomer.getLastname() != null) {
+                        customer.setLastname(newCustomer.getLastname());
+                    }
+
                     return customerRepository.save(customer);
                 })
                 .orElseGet(() -> {
