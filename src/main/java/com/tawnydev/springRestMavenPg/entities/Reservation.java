@@ -27,4 +27,10 @@ public class Reservation {
 
     protected Reservation() {
     }
+
+    public Reservation(Integer chambre, Hotel hotel, Customer customer) {
+        this.chambre = chambre;
+        this.hotel = hotel;
+        this.customer = customer;
+    }
 }
