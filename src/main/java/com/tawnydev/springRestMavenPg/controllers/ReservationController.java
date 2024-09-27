@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ReservationController {
@@ -28,12 +29,15 @@ public class ReservationController {
             page = 0;
         }
         List<Reservation> list = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page,5, Sort.by("hotel"));
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("hotel"));
         for (Reservation res : reservationRepository.findAll(pageable)) {
             list.add(res);
         }
         logger.info("OK get hotels");
-        return list;
+        List<Reservation> filteredList = list.stream().filter((res) -> res.getOptionSpa()).collect(Collectors.toList());
+        Double resTot = list.stream().map(res -> res.getCoutRestaurant()).reduce(0.0, Double::sum);
+        logger.info("somme des cout restaurant = " + resTot);
+        return filteredList;
     }
 
     // Single item
@@ -54,22 +58,22 @@ public class ReservationController {
 
         return reservationRepository.findById(id)
                 .map(res -> {
-                    if (newReservation.getChambre() != null){
+                    if (newReservation.getChambre() != null) {
                         res.setChambre(newReservation.getChambre());
                     }
-                    if (newReservation.getCustomer() != null){
+                    if (newReservation.getCustomer() != null) {
                         res.setCustomer(newReservation.getCustomer());
                     }
-                    if (newReservation.getHotel() != null){
+                    if (newReservation.getHotel() != null) {
                         res.setHotel(newReservation.getHotel());
                     }
-                    if (newReservation.getOptionPetitDej() != null){
+                    if (newReservation.getOptionPetitDej() != null) {
                         res.setOptionPetitDej(newReservation.getOptionPetitDej());
                     }
-                    if (newReservation.getOptionSpa() != null){
+                    if (newReservation.getOptionSpa() != null) {
                         res.setOptionSpa(newReservation.getOptionSpa());
                     }
-                    if (newReservation.getCoutRestaurant() != null){
+                    if (newReservation.getCoutRestaurant() != null) {
                         res.setCoutRestaurant(newReservation.getCoutRestaurant());
                     }
                     return reservationRepository.save(res);
